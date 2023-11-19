@@ -1,4 +1,3 @@
-export interface FileInterface { 
-    download(): void;
-    getContent(): string;
+export interface FileInterface {
+    download(fileName: string): Promise<string>;
 }

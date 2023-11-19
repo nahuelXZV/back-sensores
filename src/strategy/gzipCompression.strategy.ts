@@ -1,9 +1,12 @@
 import { CompressionInterface } from "./compressionInterface.strategy";
+import * as zlib from 'zlib';
 
 export class GzipCompressionStrategy implements CompressionInterface {
-    compress(content: string): string {
-        // Implementa la lógica de compresión GZIP
+
+    compress(content: string): Buffer {
+        const compressedContent = zlib.gzipSync(content);
         console.log('Compresión GZIP aplicada');
-        return content; // En este ejemplo, simplemente devuelve el contenido original
+        return compressedContent;
     }
+
 }

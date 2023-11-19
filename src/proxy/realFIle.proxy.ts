@@ -1,13 +1,17 @@
-export class RealFile {
-    private content: string = 'Contenido del archivo';
+import fs from 'fs';
 
-    async download(): Promise<void> {
-        // Simula una descarga asincrónica
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log('Descarga completa');
+export class RealFile {
+    private dir: string = 'src/files/';
+    private isFulfilled: boolean = false;
+
+    async download(fileName: string): Promise<string> {
+        this.isFulfilled = false;
+        const content = fs.readFileSync(this.dir + fileName, 'utf-8');
+        this.isFulfilled = true;
+        return content;
     }
 
-    getContent(): string {
-        return this.content;
+    isDownloadFulfilled(): boolean {
+        return this.isFulfilled;
     }
 }

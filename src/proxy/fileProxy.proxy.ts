@@ -1,6 +1,7 @@
 import { DownloadObserver } from "../observer/DownloadInterface.observer";
 import { FileInterface } from "./fileInterface.proxy";
 import { RealFile } from "./realFIle.proxy";
+import fs from 'fs';
 
 export class FileProxy implements FileInterface {
     private realFile: RealFile | null = null;
@@ -10,19 +11,29 @@ export class FileProxy implements FileInterface {
         this.observers.push(observer);
     }
 
-    async download(): Promise<void> {
-        if (!this.realFile) {
-            this.realFile = new RealFile();
-            for (let i = 0; i <= 100; i += 10) {
-                await new Promise(resolve => setTimeout(resolve, 500));
+    async download(fileName: string): Promise<string> {
+        if (!this.validateFile(fileName)) return "";
+        if (!this.realFile) this.realFile = new RealFile();
+
+        let downloadPromise = this.realFile.download(fileName);
+        for (let i = 0; i <= 100; i += 10) {
+            if (i < 20 || !this.realFile.isDownloadFulfilled()) {
                 this.notifyObservers(i);
+            } else {
+                this.notifyObservers(100);
+                console.log('Descarga completa');
+                break;
             }
-            console.log('Descarga completa');
         }
+        return await downloadPromise;
     }
 
-    getContent(): string {
-        return this.realFile ? this.realFile.getContent() : 'Archivo no descargado';
+    private validateFile(fileName: string): boolean {
+        if (!fs.existsSync("src/files/" + fileName)) {
+            console.log('El archivo no existe');
+            return false;
+        }
+        return true;
     }
 
     private notifyObservers(progress: number): void {
