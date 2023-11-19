@@ -29,7 +29,7 @@ export class FileProxy implements FileInterface {
     }
 
     private validateFile(fileName: string): boolean {
-        if (!fs.existsSync("src/files/" + fileName)) {
+        if (!fs.existsSync("files/" + fileName)) {
             console.log('El archivo no existe');
             return false;
         }

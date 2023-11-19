@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 export class RealFile {
-    private dir: string = 'src/files/';
+    private dir: string = 'files/';
     private isFulfilled: boolean = false;
 
     async download(fileName: string): Promise<string> {
