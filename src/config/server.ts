@@ -4,6 +4,7 @@ import { SensorController } from '../controller/sensor.controller';
 const socketIo = require('socket.io');
 import { SerialPort } from 'serialport'
 import { handlerData } from '../services/sensor.service';
+import { randomInt } from 'crypto';
 
 interface Options {
     port: number;
@@ -43,8 +44,8 @@ export class Server {
         });
 
         const port = new SerialPort({
-            path: 'COM5',
-            baudRate: 9600,
+            path: 'COM3',
+            baudRate: 38400,
         });
 
         SerialPort.list().then(ports => {
@@ -59,9 +60,14 @@ export class Server {
         port.on('data', function (data: Buffer) {
             const valor = parseInt(data.toString('utf-8'));
             if (valor <= 50) return console.log('Data:', data.toString('utf-8'))
-            handlerData(data, io);
+            handlerData(data.toString(), io, 1);
             console.log('Data:', data.toString('utf-8'))
         })
+
+        setInterval(() => {
+            const valor = randomInt(300);
+            handlerData(valor.toString(), io, randomInt(2, 6));
+        }, 50000);
 
     }
 }
