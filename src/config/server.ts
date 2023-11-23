@@ -3,6 +3,7 @@ import * as http from 'http';
 import { SensorController } from '../controller/sensor.controller';
 const socketIo = require('socket.io');
 import { SerialPort } from 'serialport'
+import { handlerData } from '../services/sensor.service';
 
 interface Options {
     port: number;
@@ -42,7 +43,7 @@ export class Server {
         });
 
         const port = new SerialPort({
-            path: 'COM3',
+            path: 'COM5',
             baudRate: 9600,
         });
 
@@ -55,14 +56,12 @@ export class Server {
             console.log('Puerto Abierto');
         });
 
-
         port.on('data', function (data: Buffer) {
-            // mostrar la data del buffer
+            const valor = parseInt(data.toString('utf-8'));
+            if (valor <= 50) return console.log('Data:', data.toString('utf-8'))
+            handlerData(data, io);
             console.log('Data:', data.toString('utf-8'))
         })
 
-        // port.on('readable', function () {
-        //     console.log('Data:', port.read())
-        // })
     }
 }

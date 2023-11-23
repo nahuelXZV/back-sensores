@@ -9,7 +9,7 @@ export class SensorController {
     // crear
     public create = async (req: Request, res: Response, socket: Socket) => {
         const { nombre, puerto, longitud, latitud, imagen } = req.body;
-        this.sensorModel = new SensorModel({ nombre, puerto, longitud, latitud, imagen });
+        this.sensorModel = new SensorModel({ nombre, puerto, longitud, latitud, imagen, estado: "Normal" });
         const result = await this.sensorModel.store();
         res.json({
             message: 'Sensor creado correctamente',
@@ -19,9 +19,9 @@ export class SensorController {
 
     // editar
     public edit = async (req: Request, res: Response, socket: Socket) => {
-        const { nombre, puerto, longitud, latitud, imagen } = req.body;
+        const { nombre, puerto, longitud, latitud, imagen, estado } = req.body;
         const { id } = req.params;
-        this.sensorModel = new SensorModel({ id: parseInt(id), nombre, puerto, longitud, latitud, imagen });
+        this.sensorModel = new SensorModel({ id: parseInt(id), nombre, puerto, longitud, latitud, imagen, estado });
         const result = await this.sensorModel.update();
         res.json({
             message: 'Sensor actualizado correctamente',
