@@ -23,7 +23,14 @@ export class Server {
     async start() {
 
         const server = http.createServer(this.app);
-        const io = socketIo(server);
+        const io = socketIo(server, {
+            cors: {
+                origin: "http://localhost:4200",
+                methods: ["GET", "POST"],
+                allowedHeaders: ["my-custom-header"],
+                credentials: true
+            }
+        });
 
         //* Middlewares
         this.app.use(express.json()); // raw
@@ -44,31 +51,31 @@ export class Server {
             console.log(`Server running on port ${this.port}`);
         });
 
-        const port = new SerialPort({
-            path: 'COM3',
-            baudRate: 38400,
-        });
+        // const port = new SerialPort({
+        //     path: 'COM3',
+        //     baudRate: 38400,
+        // });
 
-        SerialPort.list().then(ports => {
-            console.log('Puertos disponibles:');
-            ports.forEach(port => console.log(port.path));
-        });
+        // SerialPort.list().then(ports => {
+        //     console.log('Puertos disponibles:');
+        //     ports.forEach(port => console.log(port.path));
+        // });
 
-        port.on('open', () => {
-            console.log('Puerto Abierto');
-        });
+        // port.on('open', () => {
+        //     console.log('Puerto Abierto');
+        // });
 
-        port.on('data', function (data: Buffer) {
-            const valor = parseInt(data.toString('utf-8'));
-            if (valor <= 50) return console.log('Data:', data.toString('utf-8'))
-            handlerData(data.toString(), io, 1);
-            console.log('Data:', data.toString('utf-8'))
-        })
+        // port.on('data', function (data: Buffer) {
+        //     const valor = parseInt(data.toString('utf-8'));
+        //     if (valor <= 50) return console.log('Data:', data.toString('utf-8'))
+        //     handlerData(data.toString(), io, 1);
+        //     console.log('Data:', data.toString('utf-8'))
+        // })
 
         setInterval(() => {
-            const valor = randomInt(300);
-            handlerData(valor.toString(), io, randomInt(2, 6));
-        }, 50000);
+            const valor = randomInt(1, 302);
+            handlerData(valor.toString(), io, randomInt(3, 4));
+        }, 3000);
 
     }
 }

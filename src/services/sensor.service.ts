@@ -7,14 +7,15 @@ import { Sensor, SensorModel } from '../model/sensor.model';
 export async function handlerData(data: String, socket: Socket, sensor_id: number) {
     const sensorModel = new SensorModel(undefined);
     const dataAtr: Data = {
-        fecha: new Date("YYYY-MM-DD").toString(),
-        hora: new Date("HH:MM:SS").toString(),
+        fecha: new Date().toLocaleDateString(),
+        hora: new Date().toLocaleTimeString(),
         valor: data.toString(),
         sensor_id,
     };
 
     // SOCKETS
     socket.emit("new-data", dataAtr);
+    console.log("Enviado...", dataAtr);
     if (sensor_id != 1) return;
 
     const dataModel = new DataModel(dataAtr);

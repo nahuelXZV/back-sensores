@@ -31,7 +31,7 @@ export class DataModel {
     public async getAll(id: number): Promise<Data[] | undefined> {
         const client = await this.dbConexion.connect();
         try {
-            const result = await client.query('SELECT data.* FROM data WHERE sensor_id = $1', [id]);
+            const result = await client.query('SELECT data.* FROM data WHERE sensor_id = $1 ORDER BY data.id DESC limit 25', [id]);
             return await this.formatearDatos(result);
         } catch (error) {
             console.error('Error al ejecutar la consulta:', error);
