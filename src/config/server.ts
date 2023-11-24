@@ -1,5 +1,6 @@
 import express from 'express';
 import * as http from 'http';
+import cors from 'cors';
 import { SensorController } from '../controller/sensor.controller';
 const socketIo = require('socket.io');
 import { SerialPort } from 'serialport'
@@ -27,7 +28,7 @@ export class Server {
         //* Middlewares
         this.app.use(express.json()); // raw
         this.app.use(express.urlencoded({ extended: true }));
-
+        this.app.use(cors());
         const sensorController: SensorController = new SensorController();
 
         this.app.get('/sensor', (req, res) => sensorController.getAll(req, res, io));
